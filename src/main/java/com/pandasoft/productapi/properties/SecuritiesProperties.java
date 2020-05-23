@@ -15,6 +15,6 @@ public class SecuritiesProperties {
 	
 	public final int TOKEN_USAGE_DURATION_MIN = 60;
 	
-	public final String JWT_SIGNING_KEY = TextCodec.BASE64.encode("TG9yZW0gaXBzdW0gRG9sYXIgc2l0IGFtZXQ=ddd");
+	public final String JWT_SIGNING_KEY = TextCodec.BASE64.encode("TG9yZW0gaXBzdW0gRG9sYXIgc2l0IGFtZXQ=");
 			
 }

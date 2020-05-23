@@ -92,7 +92,8 @@ public class UserService {
 						.setIssuedAt(new Date())
 						.setSubject("Authorization.")
 						.setId(AuthHelper.bcrypt(7, new Date().toString() + "Jti Product api"))
-						.claim("username", "anubissmile")
+						.claim("username", result.getUsername())
+						.claim("user_id", result.getId())
 						.signWith(
 							SignatureAlgorithm.HS256, 
 							secProp.JWT_SIGNING_KEY)
@@ -112,11 +113,20 @@ public class UserService {
 		}
 	}
 	
-	public Jws<Claims> verifyToken(String token) throws Exception {
+	public Boolean verifyToken(String token) throws Exception {
 		try {
-			return Jwts.parser()
+			Jws<Claims> jws = Jwts.parser()
 					.setSigningKey(secProp.JWT_SIGNING_KEY)
 			        .parseClaimsJws(token);
+			Long userId = Long.valueOf(jws.getBody().get("user_id").toString());
+			String username = jws.getBody().get("username").toString();
+			Optional<User> userOpt = repo.findById(userId);
+			if(userOpt.isPresent()) {
+				if(username.equals(userOpt.get().getUsername())) {
+					return true;
+				}
+			}
+			return false;
 		} catch (Exception e) {
 			throw new Exception(String.format("JWT verifying failure! : %s", e.getMessage()));
 		}

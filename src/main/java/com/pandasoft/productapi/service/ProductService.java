@@ -34,6 +34,11 @@ public class ProductService {
 			return ResponseEntity.badRequest().body(msgProduct);
 		}
 		
+		if(!repo.existsById(product.getId())) {
+			msgProduct.setMessage("This product item not found!");
+			return ResponseEntity.badRequest().body(msgProduct);
+		}
+		
 		msgProduct = new ResponseMessageProduct(repo.save(product));
 		msgProduct.setMessage("Save product successfully!");
 		return ResponseEntity.ok(msgProduct);
